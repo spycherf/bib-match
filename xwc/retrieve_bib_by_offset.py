@@ -5,8 +5,6 @@ import shutil
 
 import pandas as pd
 
-import common
-
 PATH_TO_XWC = "/data/users/koopmanr/xwc"
 PATH_TO_TEMP = "temp"
 PATH_TO_IN = "isbn.csv"
@@ -18,7 +16,6 @@ if not os.path.exists(PATH_TO_OUT):
     os.makedirs(PATH_TO_OUT)
 
 
-@common.timer
 def main():
     print("Loading CSV...")
     df = pd.read_csv(PATH_TO_IN, dtype="str")
