@@ -7,7 +7,7 @@ from fuzzywuzzy import fuzz
 import pandas as pd
 
 PID = str(os.getpid())
-PATH_TO_IN = "isbn.csv"
+PATH_TO_IN = "workid_ocn_isbn.csv"
 PATH_TO_OUT = "out"
 PATH_TO_RECORDS = "bib"
 PATH_TO_LOGS = "logs"
