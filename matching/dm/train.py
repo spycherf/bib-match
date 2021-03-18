@@ -1,7 +1,7 @@
 import deepmatcher as dm
 import pandas as pd
 
-SAMPLE = "sample_1k_balanced"
+SAMPLE = "sample_5k_balanced"
 NB_RUNS = 30
 TEST_TYPE = "test_dirty"  # "test" (clean data) or "test_dirty"
 

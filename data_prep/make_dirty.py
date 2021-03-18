@@ -1,23 +1,29 @@
 import os
 import random
+import string
 
 import numpy as np
 import pandas as pd
 
-SAMPLE = "sample_500k_shuffled"
+SAMPLE = "sample_1k_balanced"
 PATH = os.path.join("../data/ml", SAMPLE)
 
 
-def add_typo(string: str):
-    rand = random.randrange(0, len(string))
-    return string[0:rand] + "Z" + string[rand:]
+def add_typo(s: str):
+    rand = random.randrange(0, len(s))
+    while not s[rand].isalpha() and rand > 0:
+        rand -= 1
+    letter = "Z" if s[rand].lower() != "z" else "X"
+    return s[0:rand] + letter + s[rand+1:]
 
 
-def remove_n_tokens(string: str, n: int):
-    tokens = string.split()
+def remove_n_tokens(s: str, n: int):
+    tokens = s.split()
     if len(tokens) > 2:
         for _ in range(0, n):
             rand = random.randrange(0, len(tokens))
+            while tokens[rand] in string.punctuation and rand > 0:
+                rand -= 1
             tokens.remove(tokens[rand])
 
     return " ".join([token for token in tokens])
@@ -83,7 +89,7 @@ def main():
         # Added entries
         s = row["l_added_authors"]
         if s is not np.nan:
-            if random.random() < 0.2:
+            if random.random() < 0.5:
                 pass
             else:
                 if random.random() < 0.5:
@@ -97,46 +103,45 @@ def main():
         # Title statement
         s = row["l_title_statement"]
         if s is not np.nan:
-            if random.random() < 0.2:
+            if random.random() < 0.5:
                 pass
             else:
                 sub_start = s.find(":")
                 resp_start = s.find("/")
-
                 if resp_start != -1:
                     if sub_start != -1:
-                        df.at[i, "l_title_statement"] = s[0:sub_start] + s[resp_start:]
+                        s = s[0:sub_start] + s[resp_start:]
                     else:
-                        df.at[i, "l_title_statement"] = s[0:resp_start]
+                        s = s[0:resp_start]
+            if random.random() < 0.2:
+                s = add_typo(s)
 
-            if random.random() < 0.5:
-                df.at[i, "l_title_statement"] = add_typo(s)
+            df.at[i, "l_title_statement"] = s
 
         # Edition statement
         s = row["l_edition_statement"]
         if s is not np.nan:
-            if random.random() < 0.2:
+            if random.random() < 0.5:
                 pass
             else:
-                if random.random() < 0.3:
-                    df.at[i, "l_edition_statement"] = ""
-                else:
-                    if random.random() < 0.5:
-                        df.at[i, "l_edition_statement"] = ""
-                        df.at[i, "l_title_statement"] += " " + s
-                    else:
-                        df.at[i, "l_edition_statement"] = add_typo(s)
+                df.at[i, "l_edition_statement"] = ""
+                if random.random() < 0.5:
+                    df.at[i, "l_title_statement"] += " " + s
 
         # Publishing information
         s = row["l_publishing_info"]
         if s is not np.nan:
-            if random.random() < 0.2:
+            if random.random() < 0.5:
                 pass
             else:
                 if random.random() < 0.2:
-                    df.at[i, "l_publishing_info"] = "[S.l.] : [s.n.], [s.d.]"
+                    s = "[S.l.] : [s.n.], [s.d.]"
                 else:
-                    df.at[i, "l_publishing_info"] = remove_n_tokens(s, n=2)
+                    s = remove_n_tokens(s, n=1)
+                    if random.random() < 0.2:
+                        s = add_typo(s)
+
+            df.at[i, "l_publishing_info"] = s
 
         # Physical description
         s = row["l_physical_description"]
@@ -153,9 +158,6 @@ def main():
 
                 if detail_start != -1:
                     df.at[i, "l_physical_description"] = s[0:detail_start]
-
-            if random.random() < 0.5:
-                df.at[i, "l_physical_description"] = add_typo(s)
 
     df.to_csv(os.path.join(PATH, "test_dirty.csv"), index_label="id")
 
