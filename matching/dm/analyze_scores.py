@@ -4,7 +4,7 @@ import pandas as pd
 import pylab as py
 import scipy.stats as stats
 
-scores = pd.read_csv("../../results/sample_size/scores_sample_100k_balanced_batch_16.csv")
+scores = pd.read_csv("../../results/sample_size/scores_sample_1k_balanced_batch_16.csv")
 f1_val = scores["f1_val"]
 f1_test = scores["f1_test"]
 
@@ -41,5 +41,5 @@ for z in [1.645, 1.96]:  # 1.96 = 95%, 1.645 = 90%
 stats.probplot(f1_val, dist="norm", plot=py)
 py.show()
 
-stats.probplot(f1_test, dist="norm", plot=py)
-py.show()
+# stats.probplot(f1_test, dist="norm", plot=py)
+# py.show()

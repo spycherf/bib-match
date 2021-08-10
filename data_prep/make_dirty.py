@@ -5,7 +5,7 @@ import string
 import numpy as np
 import pandas as pd
 
-SAMPLE = "sample_1k_balanced"
+SAMPLE = "sample_1k_shuffled"
 PATH = os.path.join("../data/ml", SAMPLE)
 
 
@@ -40,16 +40,12 @@ def main():
         df.at[i, "l_bib_lvl"] = "m"
 
         # Form
-        if row["l_form"] == " ":
-            if random.random() < 0.5:
-                df.at[i, "l_form"] = "|"
-        else:
-            df.at[i, "l_form"] = " "
+        df.at[i, "l_form"] = " "
 
         # Date 1
         date = row["l_date_1"]
         if date != "    ":
-            if random.random() < 0.5:
+            if random.random() < 0.7:
                 pass
             else:
                 if random.random() < 0.5:
@@ -62,13 +58,13 @@ def main():
         df.at[i, "l_date_2"] = "    "
 
         # Language
-        if random.random() < 0.2:
+        if random.random() < 0.5:
             pass
         else:
             df.at[i, "l_language"] = "   "
 
         # Place of publication
-        if random.random() < 0.2:
+        if random.random() < 0.5:
             pass
         else:
             df.at[i, "l_country"] = "   "
@@ -76,13 +72,13 @@ def main():
         # Main author entry
         s = row["l_main_author"]
         if s is not np.nan:
-            if random.random() < 0.5:
+            if random.random() < 0.7:
                 pass
             else:
                 if random.random() < 0.5:
                     s = row["l_main_author"].split(",")
                     if len(s) > 1:
-                        df.at[i, "l_main_author"] = s[1] + ", " + s[0]
+                        df.at[i, "l_main_author"] = s[1] + " " + s[0]
                 else:
                     df.at[i, "l_main_author"] = add_typo(row["l_main_author"])
 
@@ -103,7 +99,7 @@ def main():
         # Title statement
         s = row["l_title_statement"]
         if s is not np.nan:
-            if random.random() < 0.5:
+            if random.random() < 0.7:
                 pass
             else:
                 sub_start = s.find(":")
@@ -113,7 +109,7 @@ def main():
                         s = s[0:sub_start] + s[resp_start:]
                     else:
                         s = s[0:resp_start]
-            if random.random() < 0.2:
+            if random.random() < 0.05:
                 s = add_typo(s)
 
             df.at[i, "l_title_statement"] = s
@@ -134,12 +130,13 @@ def main():
             if random.random() < 0.5:
                 pass
             else:
-                if random.random() < 0.2:
+                if random.random() < 0.1:
                     s = "[S.l.] : [s.n.], [s.d.]"
                 else:
-                    s = remove_n_tokens(s, n=1)
-                    if random.random() < 0.2:
-                        s = add_typo(s)
+                    n = 1 if random.random() < 0.5 else 2
+                    s = remove_n_tokens(s, n=n)
+            if random.random() < 0.05:
+                s = add_typo(s)
 
             df.at[i, "l_publishing_info"] = s
 
@@ -147,7 +144,8 @@ def main():
         s = row["l_physical_description"]
         if s is not np.nan:
             df.at[i, "l_physical_description"] = s.replace("pages", "p.")
-            if random.random() < 0.2:
+            df.at[i, "l_physical_description"] = s.replace("Seiten", "S.")
+            if random.random() < 0.3:
                 pass
             else:
                 detail_start = s.find(":")

@@ -1,18 +1,17 @@
 import deepmatcher as dm
 import pandas as pd
 
-SAMPLE = "sample_5k_balanced"
-NB_RUNS = 30
-TEST_TYPE = "test_dirty"  # "test" (clean data) or "test_dirty"
-TRAIN = True
+from sklearn.metrics import f1_score
 
+SAMPLE = "sample_50k_balanced"
+# NB_RUNS = 30
 
-# Process data
+# Process clean data
 train, val, test = dm.data.process(
     path="deepmatcher_data/training/{}".format(SAMPLE),
     train="train.csv",
     validation="val.csv",
-    test="{}.csv".format(TEST_TYPE),
+    test="test.csv",
     ignore_columns=("l_ocn", "r_ocn", "l_workid", "r_workid", "l_isbn", "r_isbn"),
     left_prefix="l_",
     right_prefix="r_",
@@ -27,10 +26,9 @@ train, val, test = dm.data.process(
     auto_rebuild_cache=True
 )
 
-scores = pd.DataFrame(columns=["f1_val", "f1_{}".format(TEST_TYPE)])
+scores = pd.DataFrame(columns=["f1_val", "f1_test", "f1_test_dirty"])
 
-# Train model n times
-for n in range(0, NB_RUNS):
+for n in range(29, 30):
     print("\nRun", n)
     model = dm.MatchingModel(
         attr_summarizer=dm.attr_summarizers.Hybrid(
@@ -43,7 +41,8 @@ for n in range(0, NB_RUNS):
     )
     model.initialize(train)
 
-    # Train and get scores
+    # Train model
+    print("Training model...")
     f1_val = model.run_train(
         train,
         val,
@@ -52,21 +51,40 @@ for n in range(0, NB_RUNS):
         best_save_path="deepmatcher_data/models/best_model_{0}_{1}".format(SAMPLE, str(n))
     )
 
-    f1_test = model.run_eval(test)
+    f1_test = model.run_eval(test, batch_size=16)
 
+    # Process dirty data
+    test_dirty = dm.data.process_unlabeled(
+        path="deepmatcher_data/training/{}/test_dirty.csv".format(SAMPLE),
+        trained_model=model,
+        ignore_columns=("id", "label", "l_ocn", "r_ocn", "l_workid", "r_workid", "l_isbn", "r_isbn")
+    )
+
+    # Get predictions and F1 score for dirty data
+    test_dirty_pred = model.run_prediction(test_dirty, output_attributes=True)
+    y_true = pd.read_csv("deepmatcher_data/training/{}/test_dirty.csv".format(SAMPLE), index_col="id")["label"]
+    test_dirty_pred["label"] = y_true.values
+    y_pred = test_dirty_pred["match_score"].apply(lambda score: 1 if score >= 0.5 else 0)
+    f1_test_dirty = f1_score(y_true, y_pred) * 100
+
+    # Export scores
     scores.at[n, "f1_val"] = f1_val.item()
-    scores.at[n, "f1_{}".format(TEST_TYPE)] = f1_test.item()
+    scores.at[n, "f1_test"] = f1_test.item()
+    scores.at[n, "f1_test_dirty"] = f1_test_dirty
+
     scores.to_csv("deepmatcher_data/logs/scores_{}.csv".format(SAMPLE), index=False)
 
-    # Save predictions
+    # Export predictions
     val_pred = model.run_prediction(val, output_attributes=True)
     val_pred[["label", "match_score"]].to_csv(
         "deepmatcher_data/logs/val_predictions_{0}_{1}.csv".format(SAMPLE, str(n)),
         index_label="id")
+
     test_pred = model.run_prediction(test, output_attributes=True)
     test_pred[["label", "match_score"]].to_csv(
-        "deepmatcher_data/logs/{0}_predictions_{1}_{2}.csv".format(TEST_TYPE, SAMPLE, str(n)),
+        "deepmatcher_data/logs/test_predictions_{0}_{1}.csv".format(SAMPLE, str(n)),
         index_label="id")
 
-    print("Prediction score sample (from validation set):\n",
-          val_pred[["label", "match_score"]].head(15))
+    test_dirty_pred[["label", "match_score"]].to_csv(
+        "deepmatcher_data/logs/test_dirty_predictions_{0}_{1}.csv".format(SAMPLE, str(n)),
+        index_label="id")
