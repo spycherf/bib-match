@@ -1,0 +1,131 @@
+C:\ProgramData\Anaconda3\python.exe C:/Users/spych/ggldrive/education/mis/internship/git/bib-match/2_analysis/rulematcher/analyze_rm_preds.py
+RULEMATCHER_PREDICTIONS_SAMPLE_50K_BALANCED_TEST_CLEAN_BLOCKING.CSV
+AUC score: 0.63
+
+F1 MAXIMIZATION
+
+Threshold: 0.0
+TP: 2562
+FP: 2438
+TN: 0
+FN: 0
+Precision: 0.512
+Recall: 1.0
+F1: 0.678
+Accuracy: 0.512
+
+   ----------   
+
+
+RECALL MAXIMIZATION UNDER PRECISION CONSTRAINT
+
+Threshold: 0.75
+TP: 572
+FP: 112
+TN: 2326
+FN: 1990
+Precision: 0.836
+Recall: 0.223
+F1: 0.352
+Accuracy: 0.58
+
+   ----------   
+
+RULEMATCHER_PREDICTIONS_SAMPLE_50K_BALANCED_TEST_CLEAN_NOBLOCKING.CSV
+AUC score: 0.763
+
+F1 MAXIMIZATION
+
+Threshold: 0.544
+TP: 2333
+FP: 1456
+TN: 982
+FN: 229
+Precision: 0.616
+Recall: 0.911
+F1: 0.735
+Accuracy: 0.663
+
+   ----------   
+
+
+RECALL MAXIMIZATION UNDER PRECISION CONSTRAINT
+
+Threshold: 0.75
+TP: 998
+FP: 245
+TN: 2193
+FN: 1564
+Precision: 0.803
+Recall: 0.39
+F1: 0.525
+Accuracy: 0.638
+
+   ----------   
+
+RULEMATCHER_PREDICTIONS_SAMPLE_50K_BALANCED_TEST_DIRTY_BLOCKING.CSV
+AUC score: 0.598
+
+F1 MAXIMIZATION
+
+Threshold: 0.0
+TP: 2562
+FP: 2438
+TN: 0
+FN: 0
+Precision: 0.512
+Recall: 1.0
+F1: 0.678
+Accuracy: 0.512
+
+   ----------   
+
+
+RECALL MAXIMIZATION UNDER PRECISION CONSTRAINT
+
+Threshold: 0.671
+TP: 371
+FP: 88
+TN: 2350
+FN: 2191
+Precision: 0.808
+Recall: 0.145
+F1: 0.246
+Accuracy: 0.544
+
+   ----------   
+
+RULEMATCHER_PREDICTIONS_SAMPLE_50K_BALANCED_TEST_DIRTY_NOBLOCKING.CSV
+AUC score: 0.692
+
+F1 MAXIMIZATION
+
+Threshold: 0.421
+TP: 2354
+FP: 1791
+TN: 647
+FN: 208
+Precision: 0.568
+Recall: 0.919
+F1: 0.702
+Accuracy: 0.6
+
+   ----------   
+
+
+RECALL MAXIMIZATION UNDER PRECISION CONSTRAINT
+
+Threshold: 0.752
+TP: 328
+FP: 80
+TN: 2358
+FN: 2234
+Precision: 0.804
+Recall: 0.128
+F1: 0.221
+Accuracy: 0.537
+
+   ----------   
+
+
+Process finished with exit code 0
