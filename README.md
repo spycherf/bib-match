@@ -19,5 +19,5 @@ Aggregators of library records like OCLC often have to deal poor-quality data. S
 ## Repository Structure
 
 * `0_data_prep`: The scripts in this folder are used to go from the raw CDF XML records to the labeled ground truth needed for the project (in both its clean and dirty version).
-* `1_matching`: This folder contains the scripts for the two competing matching approaches: [DeepMatcher](https://github.com/anhaidgroup/deepmatcher) and RuleMatcher.
-* `2_analysis`: Various short scripts to analyze the predictions made by the matching algorithms.
+* `1_matching`: This folder contains the scripts to predict whether record pairs are a match or not, using the two competing approaches: RuleMatcher and [DeepMatcher](https://github.com/anhaidgroup/deepmatcher).
+* `2_analysis`: Various short scripts to analyze the predictions made by each approach.
