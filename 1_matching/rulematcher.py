@@ -236,6 +236,11 @@ def compute_match_score(record_pair: pd.DataFrame, check_fingerprint: bool):
 
 
 def main():
+    # df = pd.read_csv("../_data/ml/test_sample.csv", dtype=str)
+    # preds = df.apply(compute_match_score, axis=1, args=(False,))
+    # for i, row in preds.iterrows():
+    #     print(row["match_score"])
+
     for file in ["test", "test_dirty"]:
         path = "../_data/ml/{0}/{1}.csv".format(SAMPLE, file)
         df = pd.read_csv(path, dtype=str)
