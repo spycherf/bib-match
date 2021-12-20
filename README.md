@@ -2,9 +2,7 @@
 
 ## Author
 
-Frederic Spycher
-
-*Master student in Information Systems at University of Lausanne*
+**Frederic Spycher**, Master student in Information Systems at University of Lausanne
 
 ## Context
 
